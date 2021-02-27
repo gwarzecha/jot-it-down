@@ -4,7 +4,7 @@ const fs = require('fs');
 
 // instantiantes express server
 const app = express();
-const PORT = process.env.port || 3003;
+const PORT = process.env.PORT || 3003;
 
 // middleware
 app.use(express.urlencoded({ extended: true }));
@@ -32,6 +32,25 @@ app.get('/api/notes', (req, res) => {
     return res.json(notes);
   })
 });
+
+// create a note
+app.post('/api/notes', (req, res) => {
+  let newNote = req.body;
+  console.log(newNote);
+
+  fs.readFile('./db/db.json', (err, data) => {
+    if (err) throw (err);
+    let pastNote = (JSON.parse(data));
+    pastNote.push(newNote);
+    console.log(pastNote);
+
+    fs.writeFile('./db/db/json', JSON.stringify(pastNote), (err) => {
+      console.log('Note Created')
+    })
+  })
+
+  res.json(newNote);
+})
 
 
 // listen method for server
